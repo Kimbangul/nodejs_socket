@@ -1,0 +1,2 @@
+Samsung:GAL23:1400000
+Apple:iphone15:1500000
