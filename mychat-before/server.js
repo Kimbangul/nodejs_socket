@@ -22,11 +22,20 @@ io.sockets.on('connection', function (socket) {
     io.sockets.emit('allUser', users);
   }
 
-  socket.on('newUser', (userName) => {
+  socket.on('disconnect', () => {
+    if (socket.userName) {
+      users.splice(users.indexOf(socket.userName), 1);
+      connections.splice(connections.indexOf(socket), 1);
+      updateUsername();
+    }
+  });
+
+  socket.on('newUser', (userName, callback) => {
     users.push(userName);
     socket.userName = userName;
     console.log(userName);
     updateUsername(); // 모든 소켓에 업데이트;
+    if (callback) callback(true);
   });
 
   socket.on('newMsg', (msg) => {

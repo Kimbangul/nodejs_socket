@@ -57,9 +57,9 @@
                 // 소켓메세지 전송
                 let userName = $('#username').val();
                 console.log(userName);
-                socket.emit('newUser', userName);
-                $('#userArea').hide();
-                $('#msgArea').show();
+                socket.emit('newUser', userName, toggle);
+                // $('#userArea').hide();
+                // $('#msgArea').show();
                 e.preventDefault();
            });
 
@@ -74,10 +74,19 @@
            socket.on('newMsgFromServer', (msg) => {
             const chat = `<div class='chat-item'><span class='chat-user-name'>${msg.userName}</span>: ${msg.msg}</div>`;
             $('#chat').append(chat);
-            
+
             //  입력창 초기화
             $('#msg').val("");
            });
+
+           const toggle = (isOk) => {
+          
+            if (isOk){
+                console.log('toggle');
+                $('#userArea').toggle();
+               $('#msgArea').toggle();
+            }
+           }
 
            socket.on('allUser', (users)=>{
             $('#users').empty();
