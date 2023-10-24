@@ -50,7 +50,42 @@
     </div>
     <script>
         $(function(){
+           const socket = io.connect();
+           $('#msgArea').hide();
+
+           $("#userForm").on('submit', (e)=>{
+                // 소켓메세지 전송
+                let userName = $('#username').val();
+                console.log(userName);
+                socket.emit('newUser', userName);
+                $('#userArea').hide();
+                $('#msgArea').show();
+                e.preventDefault();
+           });
+
            
+           $("#msgForm").on('submit', (e)=>{
+                // 소켓메세지 전송
+                let msg = $('#msg').val();
+                socket.emit('newMsg', msg)
+                e.preventDefault();
+           });
+
+           socket.on('newMsgFromServer', (msg) => {
+            const chat = `<div class='chat-item'><span class='chat-user-name'>${msg.userName}</span>: ${msg.msg}</div>`;
+            $('#chat').append(chat);
+            
+            //  입력창 초기화
+            $('#msg').val("");
+           });
+
+           socket.on('allUser', (users)=>{
+            $('#users').empty();
+            users.map(user => {
+                let li = `<li class="list-group-item">${user}</li>`;
+                $('#users').append(li);
+            });
+           });
         });
     </script>
 </body>

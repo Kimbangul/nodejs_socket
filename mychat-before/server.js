@@ -18,6 +18,20 @@ io.sockets.on('connection', function (socket) {
   console.log('connection : %s sockets connected', socket);
 
   function updateUsername() {
-    io.sockets.emit('get users', users);
+    // io.sockets.emit('get users', users);
+    io.sockets.emit('allUser', users);
   }
+
+  socket.on('newUser', (userName) => {
+    users.push(userName);
+    socket.userName = userName;
+    console.log(userName);
+    updateUsername(); // 모든 소켓에 업데이트;
+  });
+
+  socket.on('newMsg', (msg) => {
+    const message = { userName: socket.userName, msg: msg };
+    console.log(`{ userName: ${socket.userName}, msg: ${msg} }`);
+    io.sockets.emit('newMsgFromServer', message);
+  });
 });
