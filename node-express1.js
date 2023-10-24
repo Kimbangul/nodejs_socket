@@ -12,6 +12,16 @@ app.get('/', function (req, res) {
 app.get('/emp', function (req, res) {
   res.render('index.ejs');
 });
+
+app.get('/emp/:id', function (req, res) {
+  let id = req.params.id;
+  const result = {
+    id: id,
+    name: 'haha',
+  };
+  res.render('emp.ejs', result);
+});
+
 //서버 기동
 app.listen(8888, function () {
   console.log('ready');

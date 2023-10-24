@@ -1,14 +1,37 @@
-const fs = require('fs');
+const express = require('express');
+const app = express();
+app.set('view engine', 'ejs');
+app.set('views', __dirname + '/view');
 
-const printExpensive = (arr) => {
-  console.log(`제일 비싼 휴대폰은 ${arr[0][0]} ${arr[0][1]} 입니다.`);
-};
+//라우팅 설정
+// / 로 요청
+app.get('/', function (req, res) {
+  res.send('main page');
+});
 
-// 내림차순 정렬
-const sortProduct = (err, text) => {
-  const productArr = text.split('\n').map((el) => el.split(':'));
-  const descendingArr = productArr.sort((a, b) => parseInt(b[2]) - parseInt(a[2]));
-  printExpensive(descendingArr);
-};
+// /empjson/100 으로 요청
+app.get('/empjson/:id', function (req, res) {
+  const id = { id: req.params.id };
+  res.json(id);
+});
 
-fs.readFile('./products.txt', 'utf-8', sortProduct);
+// emppage/100 으로 요청
+app.get('/emppage/:id', function (req, res) {
+  let id = req.params.id;
+  const result = {
+    id: id,
+    name: 'haha',
+  };
+  res.render('emp.ejs', result);
+});
+
+//  /emp?id=111&name=Hong 으로 요청
+app.get('/emp', function (req, res) {
+  const json = { id: req.query.id, name: req.query.name };
+  res.json(json);
+});
+
+//서버 기동
+app.listen(8888, function () {
+  console.log('server start');
+});
